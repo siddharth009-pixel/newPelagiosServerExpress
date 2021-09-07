@@ -1,6 +1,7 @@
 const Category = require('../models/category')
 const slugify=require('slugify')
-const shortid=require('shortid')
+const shortid=require('shortid');
+const { convertToBase64 } = require('../helpers/base64convertor');
 
 function sortCategories(categories,parentId=null){
 
@@ -33,8 +34,10 @@ exports.createCategory=(req,res)=>{
         slug:`${slugify(req.body.name)}-${shortid.generate()}`
     }
 
-    if(req.file){
-        catObject.categoryImage=(process.env.API + '/public/' + req.file.filename)
+    
+    if(req.files){    
+        let pictures=convertToBase64(req.files)
+        catObject.categoryImage=pictures
     }
 
     if(req.body.parentId){
@@ -53,8 +56,9 @@ exports.getCategories=async (req,res)=>{
 
     await Category.find({})
         .then((category)=>{
+            const token=req.headers.authorization.split(' ')[1];
             const categoryList=sortCategories(category);
-            res.status(200).send({categoryList})
+            res.status(200).send(req.user)
         })
         .catch((err)=>{
             res.send(err);

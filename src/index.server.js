@@ -14,11 +14,27 @@ const addressRoutes=require('./routes/address')
 const orderRoutes=require('./routes/order')
 const adminOrderRoutes=require('./routes/admin/order')
 const reviewRoutes=require('./routes/review')
+var jwt = require('express-jwt');
+var jwks = require('jwks-rsa');
 // const { requiredSignIn } = require('./common-middleware')
 const path=require('path')
 const cors=require('cors')
-
 _env.config();
+
+var port = process.env.PORT || 8080;
+
+var jwtCheck = jwt({
+      secret: jwks.expressJwtSecret({
+          cache: true,
+          rateLimit: true,
+          jwksRequestsPerMinute: 5,
+          jwksUri: 'https://pelagios.au.auth0.com/.well-known/jwks.json'
+    }),
+    audience: 'pelagiosart.com',
+    issuer: 'https://pelagios.au.auth0.com/',
+    algorithms: ['RS256']
+}).unless(['/api/check']);
+
 
 mongoose
   .connect(
@@ -41,6 +57,7 @@ mongoose
 
 
 app.use(cors())
+// app.use(jwtCheck);
 app.use(express.json())
 app.use('/public',express.static(path.join(__dirname,'uploads')))
 app.use('/api',initialDataRoutes);
@@ -55,14 +72,14 @@ app.use('/api',orderRoutes)
 app.use('/api',adminOrderRoutes)
 app.use('/api',reviewRoutes)
 
-// app.get('/api/check',requiredSignIn,(req,res)=>{
+app.get('/api/check',(req,res)=>{
     
-//     console.log("you are signed in")
-//     res.send("you are logged in")
-// })
+    console.log("you are signed in")
+    res.send("you are logged in")
+})
 
 
-app.listen(process.env.PORT||3000,()=>{
-    console.log(`server running pn port number ${process.env.PORT}`)
+app.listen(2000,()=>{
+    console.log(`server running pn port number http://localhost:2000`)
 })
 

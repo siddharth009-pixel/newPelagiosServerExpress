@@ -1,60 +1,60 @@
-const mongoose=require('mongoose')
-const bcrypt=require('bcrypt')
+const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 
-const userSchema=new mongoose.Schema({
-    firstname:{
-        type:String,
-        require:true,
-        trim:true,
-        min:3,
-        max:20
+const userSchema = new mongoose.Schema({
+    firstname: {
+        type: String,
+        require: true,
+        trim: true,
+        min: 3,
+        max: 20
     },
-    lastname:{
-        type:String,
-        require:true,
-        trim:true,
-        min:3,
-        max:20
+    lastname: {
+        type: String,
+        require: true,
+        trim: true,
+        min: 3,
+        max: 20
     },
-    username:{
-        type:String,
-        require:true,
-        trim:true,
-        lowercase:true,
-        unique:true,
-        index:true
+    username: {
+        type: String,
+        require: true,
+        trim: true,
+        lowercase: true,
+        unique: true,
+        index: true
     },
-    email:{
-        type:String,
-        require:true,
-        unique:true,
-        trim:true,
-        lowercase:true
+    email: {
+        type: String,
+        require: true,
+        unique: true,
+        trim: true,
+        lowercase: true
     },
-    hash_password:{
-        type:String,
-        require:true
+    hash_password: {
+        type: String,
+        require: true
     },
-    role:{
-        type:String,
-        enum:['admin','user'],  
-        default:'user'
+    role: {
+        type: String,
+        enum: ['admin', 'user'],
+        default: 'user'
     },
-    contactNumber:{
-        type:Number
+    contactNumber: {
+        type: Number
     },
-    profilePicture:{
-        type:String
+    profilePicture: [{
+        img: { type: String }
+    }],
+    activeStatus: {
+        type: Boolean,
+        default: true
     },
-    activeStatus:{
-        type:Boolean,
-        default:true
+    address: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UserAddress'
     },
-    address:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'UserAddress'
-    },
-},{timestamps:true})
+}, { timestamps: true })
 
 // userSchema.virtual('password')
 // .set(function(password){
@@ -62,18 +62,18 @@ const userSchema=new mongoose.Schema({
 // })
 
 userSchema.virtual('fullname')
-.set(function(firstname,lastname){
-    return `${firstname} ${lastname}`
-})
+    .set(function (firstname, lastname) {
+        return `${firstname} ${lastname}`
+    })
 
-userSchema.methods={
-    authenticate:async function(password){
-        return await bcrypt.compare(password,this.hash_password);
+userSchema.methods = {
+    authenticate: async function (password) {
+        return await bcrypt.compare(password, this.hash_password);
     }
 }
 
 
 
-const userModel=mongoose.model('user',userSchema)
+const userModel = mongoose.model('user', userSchema)
 
-module.exports=userModel;
+module.exports = userModel;

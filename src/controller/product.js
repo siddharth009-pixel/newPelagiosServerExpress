@@ -1,26 +1,35 @@
 const slugify = require("slugify");
 const Category = require("../models/category");
 const Product = require("../models/product")
+const fs = require('fs');
+const base64Img = require('base64-img');
+const { convertToBase64 } = require("../helpers/base64convertor");
 
 
 exports.createProduct=(req,res)=>{
     
     const {name,description,offer,quantity,category,price}=req.body;
 
-    let productPictures=[] 
-    if(req.files.length>0){
-        productPictures=req.files.map(file=>{
-            return { img : file.filename }
-        })
-    }
+    // let productPictures=[] 
+    // if(req.files.length>0){
+    //     productPictures=req.files.map(file=>{
+    //         return { img : file.filename }
+    //     })
+    // }
+
     
+
+    let pictures=convertToBase64(req.files)
+
+    
+    // return res.status(200).send('asdfgh')
     const product=new Product({
         name,
         slug:slugify(name),
         price,
         description,
         offer,
-        productPictures,
+        productPictures:pictures,
         quantity,
         category,
         createdBy:req.user._id
