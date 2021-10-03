@@ -4,25 +4,15 @@ const bcrypt = require('bcrypt')
 const userSchema = new mongoose.Schema({
     firstname: {
         type: String,
-        require: true,
         trim: true,
         min: 3,
         max: 20
     },
     lastname: {
         type: String,
-        require: true,
         trim: true,
         min: 3,
         max: 20
-    },
-    username: {
-        type: String,
-        require: true,
-        trim: true,
-        lowercase: true,
-        unique: true,
-        index: true
     },
     email: {
         type: String,
@@ -35,6 +25,12 @@ const userSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+    gender:{
+        type: String,
+        enum: ['male', 'female','notSpeecified'],
+        default: 'notSpecified'
+    }
+    ,
     role: {
         type: String,
         enum: ['admin', 'user'],
@@ -77,3 +73,12 @@ userSchema.methods = {
 const userModel = mongoose.model('user', userSchema)
 
 module.exports = userModel;
+
+
+// username: {
+//     type: String,
+//     trim: true,
+//     lowercase: true,
+//     unique: true,
+//     index: true
+// },

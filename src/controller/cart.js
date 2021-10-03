@@ -13,12 +13,15 @@ const runUpdate = (condition, updateData) => {
 
 
 exports.addItemToCart = (req, res) => {
+    console.log('add to cart item api');
     Cart.findOne({ user: req.user._id })
         .exec((err, cart) => {
             if (err) {
+                console.log('err occured');
                 return res.status(400).send({ error: err })
             }
             if (cart) {
+                console.log('cart aviable')
                 let promiseArray = []
                 req.body.cartItems.forEach((cartItem) => {
                     const product = cartItem.product
@@ -53,6 +56,8 @@ exports.addItemToCart = (req, res) => {
                         return res.status(400).send({ error: 'sdfgh' })
                     })
             } else {
+                console.log('cart not aviable')
+
                 const cart = new Cart({
                     user: req.user._id,
                     cartItems: req.body.cartItems

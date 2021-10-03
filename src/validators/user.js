@@ -11,18 +11,9 @@ next();
 
 
 exports.validateSignupRequest=[
-    check('firstname')
-    .notEmpty()
-    .withMessage('FirstName is required'),
-    check('lastname')
-    .notEmpty()
-    .withMessage('lastname is required'),
     check('email')
     .isEmail()
-    .withMessage('valid email required'),
-    check('password')
-    .isLength({min:6})
-    .withMessage('password required')
+    .withMessage('valid email required')
 ]
 
 exports.validateSigninRequest=[
@@ -33,3 +24,20 @@ exports.validateSigninRequest=[
     .isLength({min:6})
     .withMessage('password required')
 ]
+
+
+
+// exports.validateSignupRequest=[
+//     check('firstname')
+//     .notEmpty()
+//     .withMessage('FirstName is required'),
+//     check('lastname')
+//     .notEmpty()
+//     .withMessage('lastname is required'),
+//     check('email')
+//     .isEmail()
+//     .withMessage('valid email required'),
+//     check('password')
+//     .isLength({min:6})
+//     .withMessage('password required')
+// ]

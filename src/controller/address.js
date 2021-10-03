@@ -57,6 +57,42 @@ exports.addAddress = async (req, res) => {
   }
 };
 
+exports.deleteAddress=async (req,res)=>{
+  const { payload } = req.body;
+
+  if (payload) {
+
+    if (payload._id) {
+      await UserAddress.findOneAndUpdate(
+        { user: req.user._id },
+        {
+          "$pull": {
+            "address": {
+              "_id": payload._id
+            }
+          }
+        },
+        {new: true, upsert: true }
+      ).exec((error, address) => {
+        if (error) {
+          return res.status(400).send({ error: error });
+        }
+        if (address) {
+          // addressModelId=address._id;
+          return res.status(201).send({ userAddress: address });
+        }
+      });
+
+      // userModel.findOneAndUpdate({_id:req.user._id},{
+      //   $set:{
+      //     "address":addressModelId
+      //   }
+      // })
+
+    }
+}
+}
+
 exports.getAddress = async (req, res) => {
   UserAddress.findOne({ user: req.user._id }).exec((error, address) => {
     if (error) {
