@@ -15,23 +15,23 @@ exports.addOrder = (req, res) => {
                     {
                         type: 'ordered',
                         date: new Date(),
-                        isCompleted:true
+                        isCompleted: true
                     },
                     {
                         type: 'packed',
-                        isCompleted:false
+                        isCompleted: false
                     },
                     {
                         type: 'shipped',
-                        isCompleted:false
+                        isCompleted: false
                     },
                     {
                         type: 'delivered',
-                        isCompleted:false
+                        isCompleted: false
                     }
                 ]
                 const order = new Order({
-                    ...req.body.payload,orderStatus, user: req.user._id
+                    ...req.body.payload, orderStatus, user: req.user._id
                 })
 
                 order.save((err, newOrder) => {
@@ -46,6 +46,12 @@ exports.addOrder = (req, res) => {
 
 
         })
+
+}
+
+
+
+exports.addInstantOrder = async (req, res) => {
 
 }
 

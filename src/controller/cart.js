@@ -13,15 +13,12 @@ const runUpdate = (condition, updateData) => {
 
 
 exports.addItemToCart = (req, res) => {
-    console.log('add to cart item api');
     Cart.findOne({ user: req.user._id })
         .exec((err, cart) => {
             if (err) {
-                console.log('err occured');
                 return res.status(400).send({ error: err })
             }
             if (cart) {
-                console.log('cart aviable')
                 let promiseArray = []
                 req.body.cartItems.forEach((cartItem) => {
                     const product = cartItem.product
@@ -71,8 +68,39 @@ exports.addItemToCart = (req, res) => {
         })
 }
 
+exports.removeCartItem = (req, res) => {
+
+    const { productId } = req.body.payload
+    Cart.findOneAndUpdate({ user: req.user._id },
+        {
+            $pull: {
+                cartItems: {
+                    product: productId
+                }
+            }
+        }, { new: true })
+        .populate({ path: 'cartItems.product', select: '_id name price productPictures' })
+        .exec((err, cart) => {
+            if (err) {
+                return res.status(400).send({ error: error })
+            }
+            if (cart) {
+                let updatedCartItems = {};
+                cart.cartItems.length > 0 && cart.cartItems.forEach((item, index) => {
+                    updatedCartItems[item.product._id.toString()] = {
+                        _id: item.product._id.toString(),
+                        name: item.product.name,
+                        price: item.product.price,
+                        img: item.product.productPictures && item.product.productPictures.length > 0 ? item.product.productPictures[0].img : '',
+                        qty: item.quantity
+                    }
+                })
+                return res.status(201).send({ cartItems: updatedCartItems })
+            }
+        })
+}
+
 exports.getCartItems = (req, res) => {
-    console.log('sdfgh');
     Cart.findOne({ user: req.user._id })
         .populate({ path: 'cartItems.product', select: '_id name price productPictures' })
         .exec((error, cart) => {
@@ -93,7 +121,7 @@ exports.getCartItems = (req, res) => {
                 })
                 return res.status(200).json({ cartItems })
             }
-            if(!cart){
+            if (!cart) {
                 return res.status(200).send({})
 
             }
