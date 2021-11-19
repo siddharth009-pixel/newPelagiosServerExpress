@@ -82,7 +82,7 @@ app.get('/api/check', (req, res) => {
 })
 
 
-app.listen(2000, () => {
-  console.log(`server running pn port number http://localhost:2000`)
+app.listen(process.env.PORT, () => {
+  console.log(`server running pn port number ${process.env.PORT}`)
 })
 
