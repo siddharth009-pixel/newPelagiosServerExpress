@@ -38,8 +38,7 @@ var jwtCheck = jwt({
 
 mongoose
   .connect(
-    `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASSWORD}@cluster0.yeyo4.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority`
-    ,
+    `mongodb://13.233.168.27:27017/${process.env.DATABASE_NAME}`,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -54,6 +53,7 @@ mongoose
     console.log(err);
   });
 
+// mongodb://13.233.168.27:27017
 // `mongodb://localhost:27017/onemart`
 // mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASSWORD}@cluster0.yeyo4.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority
 
