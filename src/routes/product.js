@@ -6,6 +6,7 @@ const multer = require('multer')
 const path = require('path')
 const shortid = require('shortid')
 const { createProduct, getProductsBySlug, getProductDetailsById, getAllProducts, deleteProduct } = require('../controller/product')
+const { uploadS3 } = require('../common-middleware')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -18,7 +19,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-router.post('/product/create', requireSignIn, adminMiddleware, upload.array('productPictures'), createProduct)
+router.post('/product/create', requireSignIn, adminMiddleware, uploadS3.array('productPictures'), createProduct)
 router.get('/products/:slug', getProductsBySlug)
 router.get('/product/:productId', getProductDetailsById)
 router.get('/products', requireSignIn,adminMiddleware, getAllProducts)

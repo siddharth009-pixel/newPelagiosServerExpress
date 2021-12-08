@@ -34,9 +34,10 @@ exports.createCategory=(req,res)=>{
         slug:`${slugify(req.body.name)}-${shortid.generate()}`
     }
 
+    console.log(req.file)
     if(req.file){
         catObject.categoryImage=[{
-            img:`${process.env.API + '/public/' + req.file.filename}`
+            img:`${process.env.PHOTO_API + '/public/' + req.file.key}`
         }]
     }
     

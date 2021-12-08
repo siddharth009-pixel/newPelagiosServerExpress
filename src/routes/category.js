@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const { requireSignIn, adminMiddleware } = require('../common-middleware')
+const { requireSignIn, adminMiddleware, uploadS3 } = require('../common-middleware')
 const { createCategory, getCategories, updateCategory, deleteCategory } = require('../controller/category')
 const multer=require('multer')
 const path=require('path')
@@ -18,11 +18,11 @@ const storage = multer.diskStorage({
 const upload=multer({storage})
 
 
-router.post('/category/create',requireSignIn,adminMiddleware,upload.single('categoryImage'),createCategory)
+router.post('/category/create',requireSignIn,adminMiddleware,uploadS3.single('categoryImage'),createCategory)
 
 router.get('/category/getcategory',getCategories)
 
-router.post('/category/update',upload.single('categoryImage'),updateCategory)
+router.post('/category/update',uploadS3.single('categoryImage'),updateCategory)
 
 router.post('/category/delete',deleteCategory)
 

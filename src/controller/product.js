@@ -13,7 +13,7 @@ exports.createProduct=(req,res)=>{
     let productPictures=[] 
     if(req.files.length>0){
         productPictures=req.files.map(file=>{
-            return { img : `${process.env.API + '/public/' +file.filename}`}
+            return { img : `${process.env.PHOTO_API + '/public/' +file.key}`}
         })
     }
 
