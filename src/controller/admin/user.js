@@ -1,79 +1,79 @@
-const User=require('../../models/user')
+const User = require('../../models/user')
 const jwt = require('jsonwebtoken')
-const bcrypt=require('bcrypt')
+const bcrypt = require('bcrypt')
 
-exports.signUp=async(req,res)=>{
-    
-   await User.findOne({email:req.body.email})
-        .exec(async (err,isUser)=>{
-        if(isUser) return res.status(400).send("email already exists")
+exports.signUp = async (req, res) => {
 
-        const {firstname,
-            lastname,
-            username,
-            contactNumber,
-            email,
-            password,
-            profilePicture}=req.body;
-            
-            const hash_password=await bcrypt.hash(password,10)
+    await User.findOne({ email: req.body.email })
+        .exec(async (err, isUser) => {
+            if (isUser) return res.status(400).send("email already exists")
 
-            let user=new User({
-            firstname,
-            lastname,
-            username,
-            role:'admin',
-            contactNumber,
-            email,
-            hash_password,
-            profilePicture
+            const { firstname,
+                lastname,
+                username,
+                contactNumber,
+                email,
+                password,
+                profilePicture } = req.body;
+
+            const hash_password = await bcrypt.hash(password, 10)
+
+            let user = new User({
+                firstname,
+                lastname,
+                username,
+                role: 'admin',
+                contactNumber,
+                email,
+                hash_password,
+                profilePicture
+            })
+
+            //const newuser=await user.save();
+
+
+            user.save((err, data) => {
+                if (err) {
+                    return res.status(400).send({
+                        message: err
+                    })
+                }
+                if (data) {
+                    console.log(data)
+                    return res.send({ message: 'register successfully' })
+                }
+            })
+
         })
-        
-        //const newuser=await user.save();
-    
-    
-        user.save((err,data)=>{
-            if(err){
-                return res.status(400).send({
-                    message:'internal server error'
-                })
-            }
-            if(data){
-                console.log(data)
-                return res.send({message:'register successfully'})
-            }
-        })
-    
-    })
 
 }
 
 
-exports.signIn=async(req,res)=>{
-    User.findOne({email:req.body.email})
-        .exec(async(err,user)=>{
-            if(err){
-                return  res.status(400).send(err)
+exports.signIn = async (req, res) => {
+    User.findOne({ email: req.body.email })
+        .exec(async (err, user) => {
+            if (err) {
+                return res.status(400).send(err)
             }
-            if(!user){
-                return  res.status(400).send({error:'email is not registered'})    
+            if (!user) {
+                return res.status(400).send({ error: 'email is not registered' })
             }
-            if(user){
+            if (user) {
 
-                const passCheck=await user.authenticate(req.body.password)
+                const passCheck = await user.authenticate(req.body.password)
 
-                if(passCheck && user.role==='admin'){
-                    const token=jwt.sign({_id:user._id,role:user.role},process.env.SECRET_KEY,{expiresIn:'365d'})
-                    res.cookie('token',token,{expiresIn:'365d'})
+                if (passCheck && user.role === 'admin') {
+                    const token = jwt.sign({ _id: user._id, role: user.role }, process.env.SECRET_KEY, { expiresIn: '365d' })
+                    res.cookie('token', token, { expiresIn: '365d' })
                     const {
                         firstname,
                         lastname,
                         email,
                         role,
                         fullName
-                    }=user;
+                    } = user;
                     res.status(200).json({
-                        token,user:{
+                        token, user: {
                             firstname,
                             lastname,
                             email,
@@ -82,17 +82,17 @@ exports.signIn=async(req,res)=>{
                         }
 
                     })
-                }else{
-                    return res.status(400).send({error:'wrong password'})
+                } else {
+                    return res.status(400).send({ error: 'wrong password' })
                 }
-            }else{
-                return res.status(400).send({error:'something went wrong'})
+            } else {
+                return res.status(400).send({ error: 'something went wrong' })
             }
         })
 
 }
 
-exports.signOut=(req,res)=>{
+exports.signOut = (req, res) => {
     res.clearCookie('token')
-    return res.status(200).send({message:"signout successfully"})
+    return res.status(200).send({ message: "signout successfully" })
 }

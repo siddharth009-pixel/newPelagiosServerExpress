@@ -38,7 +38,7 @@ var jwtCheck = jwt({
 
 mongoose
   .connect(
-    `mongodb://13.233.168.27:27017/${process.env.DATABASE_NAME}`,
+    `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASSWORD}@cluster0.yeyo4.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority`,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
@@ -53,6 +53,7 @@ mongoose
     console.log(err);
   });
 
+  // `mongodb://13.233.168.27:27017/${process.env.DATABASE_NAME}`
 // mongodb://13.233.168.27:27017
 // `mongodb://localhost:27017/onemart`
 // mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASSWORD}@cluster0.yeyo4.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority
@@ -75,14 +76,14 @@ app.use('/api', adminOrderRoutes)
 app.use('/api', reviewRoutes)
 
 
-app.get('/api/check', (req, res) => {
+app.get('/api', (req, res) => {
 
   console.log("you are signed in")
   res.send("you are logged in")
 })
 
 
-app.listen(process.env.PORT, () => {
-  console.log(`server running pn port number ${process.env.PORT}`)
+app.listen(process.env.PORT||2000, () => {
+  console.log(`server running pn port number ${process.env.PORT?process.env.PORT:2000}`)
 })
 

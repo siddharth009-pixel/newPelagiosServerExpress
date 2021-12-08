@@ -54,6 +54,7 @@ exports.signIn = async (req, res) => {
 
                 if (passCheck && user.role === 'user') {
                     const token = jwt.sign({ _id: user._id, role: user.role }, process.env.SECRET_KEY, { expiresIn: '365d' })
+                    res.cookie('token', token, { expiresIn: '365d' })
                     const {
                         firstname,
                         lastname,

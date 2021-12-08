@@ -34,11 +34,17 @@ exports.createCategory=(req,res)=>{
         slug:`${slugify(req.body.name)}-${shortid.generate()}`
     }
 
-    
-    if(req.files){    
-        let pictures=convertToBase64(req.files)
-        catObject.categoryImage=pictures
+    if(req.file){
+        catObject.categoryImage=[{
+            img:`${process.env.API + '/public/' + req.file.filename}`
+        }]
     }
+    
+    
+    // if(req.files){    
+    //     let pictures=convertToBase64(req.files)
+    //     catObject.categoryImage=pictures
+    // }
 
     if(req.body.parentId){
         catObject.parentId=req.body.parentId
