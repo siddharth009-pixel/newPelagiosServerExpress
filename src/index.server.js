@@ -35,10 +35,10 @@ var jwtCheck = jwt({
   algorithms: ['RS256']
 }).unless(['/api/check']);
 
-
+// mongodb + srv://user:<password>@cluster0.myap3jj.mongodb.net/?retryWrites=true&w=majority
 mongoose
   .connect(
-    `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASSWORD}@cluster0.yeyo4.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority`,
+    `mongodb+srv://${process.env.USER_NAME}:${process.env.USER_PASSWORD}@cluster0.myap3jj.mongodb.net/${process.env.DATABASE_NAME}?retryWrites=true&w=majority`,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,
